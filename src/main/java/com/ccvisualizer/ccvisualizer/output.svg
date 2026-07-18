@@ -132,7 +132,7 @@
             </g>
            </g>
           </svg> Contest Rating</td>
-         <td id="curr-r" style="color: #3366CC">1715?i Provisional Rating, click to know more</td>
+         <td id="curr-r" style="color: #3366CC">1715</td>
         </tr>
         <tr style="animation-delay: 150ms">
          <td id="max-r-name" style="color: #3366CC ">
@@ -223,7 +223,7 @@
             </g>
            </g>
           </svg> Accepted</td>
-         <td id="accepted" style="color: green">112</td>
+         <td id="accepted" style="color: green">108</td>
         </tr>
        </tbody>
       </table></b>
