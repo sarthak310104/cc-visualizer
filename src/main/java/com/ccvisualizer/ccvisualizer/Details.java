@@ -24,8 +24,25 @@ public class Details {
     private String curr_col = "#11111";
     private String mx_col = "#111111";
 
+    // DSA Rating (CodeChef added this as a separate rating track alongside
+    // the regular contest rating; the profile page now shows both side by side)
+    private String dsaCurrRating = "--";
+    private String dsaMaxRating = "--";
+    private String dsaGlobalRank = "--";
+    private String dsaCountryRank = "--";
+    private String dsaCurrStar = "--";
+    private String dsaMxStar = "--";
+    private String dsaCurr_col = "#111111";
+    private String dsaMx_col = "#111111";
+
     public String colorFind(String rating){
-        Integer rate = Integer.parseInt(rating);
+        Integer rate;
+        try {
+            rate = Integer.parseInt(rating);
+        } catch (NumberFormatException e) {
+            // rating wasn't scraped (e.g. user has no DSA rating yet) - fall back safely
+            return "--;#111111";
+        }
         if(rate < 1400) return "1★;#666666";
         else if(rate < 1600) return"2★;#1E7D22";
         else if(rate < 1800) return "3★;#3366CC";
