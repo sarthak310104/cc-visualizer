@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CcVisualizerApplication {
 
@@ -22,22 +24,16 @@ public class CcVisualizerApplication {
 			String filePath = "src/main/java/com/ccvisualizer/ccvisualizer/index.html";
 			String outputSvgFilePath = "src/main/java/com/ccvisualizer/ccvisualizer/output.svg";
 
-			// Parse the HTML file
 			File input = new File(filePath);
 			Document document = Jsoup.parse(input, "UTF-8");
 
-			// String username from user_name
-			 user_name userr= new user_name();
+			user_name userr= new user_name();
 
-			// Replace the inner text of an element with a new value
 			details(userr.getUsername(), document);
 
-			// Save the modified HTML content back to the file
 			Element svgElement = convertToSvg(document);
 
-			// Save the SVG content back to the file
 			String svgContent = svgElement.outerHtml();
-			// String another
 
 			File output = new File(outputSvgFilePath);
 			writeToFile(svgContent, output);
@@ -50,10 +46,7 @@ public class CcVisualizerApplication {
 	}
 
 	private static void replaceInnerText(Document document, String elementId, String newValue) {
-		// Select the element by ID
 		Element element = document.getElementById(elementId);
-
-		// Replace the inner text with a new value
 		if (element != null) {
 			element.text(newValue);
 		} else {
@@ -62,10 +55,7 @@ public class CcVisualizerApplication {
 	}
 
 	private static void replaceAttrValue(Document document, String elementId, String atr, String atrVal) {
-		// Select the element by ID
 		Element element = document.getElementById(elementId);
-
-		// Replace the inner text with a new value
 		if (element != null) {
 			element.attr(atr, atrVal);
 		} else {
@@ -74,30 +64,29 @@ public class CcVisualizerApplication {
 	}
 
 	private static void writeToFile(String content, File file) throws IOException {
-		// Write the content to the specified file
 		org.apache.commons.io.FileUtils.writeStringToFile(file, content, "UTF-8");
 	}
 
 	private static Element convertToSvg(Document document) {
-		// Create an SVG-like structure
-		// Element svgElement = new Element("svg");
-		// svgElement.attr("xmlns", "http://www.w3.org/2000/svg");
-
-		// // Copy the body content into a foreignObject
-		// Element foreignObject = new Element("foreignObject");
-		// foreignObject.attr("width", "100%");
-		// foreignObject.attr("height", "100%");
-
-		// Element body = document.body();
-		// if (body != null) {
-		// 	foreignObject.append(body.html());
-		// }
-
-		// // Append the foreignObject to the SVG
-		// svgElement.appendChild(foreignObject);
-
 		Element svgElement = document.select("svg").first();
 		return svgElement;
+	}
+
+	// CodeChef's rating-number / rating-header blocks bundle extra nested text
+	// (a tooltip icon and "Provisional Rating, click to know more") inside the
+	// same element as the number itself. These two helpers pull out just the
+	// digits instead of trusting element.text() to be clean.
+
+	private static String extractLeadingNumber(String raw) {
+		if (raw == null) return "--";
+		Matcher m = Pattern.compile("^(\\d+)").matcher(raw.trim());
+		return m.find() ? m.group(1) : "--";
+	}
+
+	private static String extractDigits(String raw) {
+		if (raw == null) return "--";
+		Matcher m = Pattern.compile("(\\d+)").matcher(raw);
+		return m.find() ? m.group(1) : "--";
 	}
 
 	public static void details(String username, Document document) throws IOException {
@@ -106,58 +95,60 @@ public class CcVisualizerApplication {
 		String url = "https://www.codechef.com/users/" + username;
 		Document doc = Jsoup.connect(url).get();
 
-		// set username
 		user.setUsername(username);
 
-		// set name
 		Element nameElement = doc.select("h1.h2-style").first();
 		if (nameElement != null) {
 			user.setName(nameElement.text());
 		}
 
-		// set current star and rating
 		Element currStarElement = doc.select("span.rating").first();
 		if (currStarElement != null) {
 			user.setCurrStar(currStarElement.text());
 		}
-		Element currRatingElement = doc.select("div.rating-number").first();
-		if (currRatingElement != null) {
-			user.setCurrRating(currRatingElement.text());
-		}
 
-		// set institute
 		Elements instituteElements = doc.select("li:has(label:contains(Institution)) span");
 		if (!instituteElements.isEmpty()) {
 			user.setInstitute(instituteElements.first().text());
 		}
 
-		// set country
 		Element countryElement = doc.select("span.user-country-name").first();
 		if (countryElement != null) {
 			user.setCountry(countryElement.text());
 		}
 
-		// set global rank and country rank
+		// --- CodeChef Rating + DSA Rating ---
+		// Two parallel rating blocks in document order:
+		// index 0 = Contest ("CodeChef") rating, index 1 = DSA rating.
+		Elements ratingNumberEls = doc.select("div.rating-number");
+		Elements ratingHeaderSmallEls = doc.select(".rating-header.text-center small");
 		List<Element> ranks = doc.select(".rating-ranks .inline-list strong");
-		if (!ranks.isEmpty()) {
-			user.setGlobalRank(ranks.get(0).text());
+
+		if (ratingNumberEls.size() > 0) {
+			user.setCurrRating(extractLeadingNumber(ratingNumberEls.get(0).text()));
 		}
-		if (ranks.size() > 1) {
-			user.setCountryRank(ranks.get(1).text());
+		if (ratingNumberEls.size() > 1) {
+			user.setDsaCurrRating(extractLeadingNumber(ratingNumberEls.get(1).text()));
 		}
 
-		// set contest participated and max rating
+		if (ratingHeaderSmallEls.size() > 0) {
+			user.setMaxRating(extractDigits(ratingHeaderSmallEls.get(0).text()));
+		}
+		if (ratingHeaderSmallEls.size() > 1) {
+			user.setDsaMaxRating(extractDigits(ratingHeaderSmallEls.get(1).text()));
+		}
+
+		// [contestGlobal, contestCountry, dsaGlobal, dsaCountry]
+		if (ranks.size() > 0) user.setGlobalRank(ranks.get(0).text());
+		if (ranks.size() > 1) user.setCountryRank(ranks.get(1).text());
+		if (ranks.size() > 2) user.setDsaGlobalRank(ranks.get(2).text());
+		if (ranks.size() > 3) user.setDsaCountryRank(ranks.get(3).text());
+
 		Element contestParticipatedElement = doc.select("div.contest-participated-count b").first();
 		if (contestParticipatedElement != null) {
 			user.setContestParticipated(contestParticipatedElement.text());
 		}
-		String temp = doc.select(".rating-header.text-center small").text().split(" ")[2];
-		if (temp.length() > 0) {
-			Integer last = temp.length() - 1;
-			user.setMaxRating(temp.substring(0, last));
-		}
 
-		// set current star color
 		Element styleElement = doc.select("span.rating").first();
 		if (styleElement != null) {
 			String style = styleElement.attr("style");
@@ -169,7 +160,6 @@ public class CcVisualizerApplication {
 			}
 		}
 
-		// set max star and color
 		String star_col = user.colorFind(user.getMaxRating());
 		if (star_col != null) {
 			String[] star_colParts = star_col.split(";");
@@ -179,16 +169,27 @@ public class CcVisualizerApplication {
 			}
 		}
 
-		// Select all <tspan> elements within <text> elements
-		List<String> problem = doc.select("section.problems-solved h3").eachText();
-		Integer sm = 0;
-
-		for (String str : problem) {
-			sm += extractNumericValue(str);
+		String dsaCurrStarCol = user.colorFind(user.getDsaCurrRating());
+		if (dsaCurrStarCol != null) {
+			String[] parts = dsaCurrStarCol.split(";");
+			if (parts.length > 1) {
+				user.setDsaCurrStar(parts[0]);
+				user.setDsaCurr_col(parts[1]);
+			}
+		}
+		String dsaMaxStarCol = user.colorFind(user.getDsaMaxRating());
+		if (dsaMaxStarCol != null) {
+			String[] parts = dsaMaxStarCol.split(";");
+			if (parts.length > 1) {
+				user.setDsaMxStar(parts[0]);
+				user.setDsaMx_col(parts[1]);
+			}
 		}
 
-		String newStr = sm.toString();
-		user.setAccepted(newStr);
+		Element totalSolvedElement = doc.select("section.problems-solved h3:contains(Total Problems Solved)").first();
+		if (totalSolvedElement != null) {
+			user.setAccepted(String.valueOf(extractNumericValue(totalSolvedElement.text())));
+		}
 
 		replaceInnerText(document, "name", username);
 		replaceInnerText(document, "user-curr", user.getName() + " ");
@@ -211,23 +212,25 @@ public class CcVisualizerApplication {
 		replaceAttrValue(document, "curr-r-name", "style", "color: " + user.getCurr_col() + " ");
 		replaceAttrValue(document, "max-r-name", "style", "color: " + user.getMx_col() + " ");
 
+		replaceInnerText(document, "dsa-curr-r", user.getDsaCurrRating());
+		replaceInnerText(document, "dsa-max-r", user.getDsaMaxRating());
+		replaceAttrValue(document, "dsa-curr-r", "style", "color: " + user.getDsaCurr_col() + " ");
+		replaceAttrValue(document, "dsa-max-r", "style", "color: " + user.getDsaMx_col());
+		replaceAttrValue(document, "dsa-curr-r-name", "style", "color: " + user.getDsaCurr_col() + " ");
+		replaceAttrValue(document, "dsa-max-r-name", "style", "color: " + user.getDsaMx_col() + " ");
+
 		System.out.println(user.toString());
-		// return user;
 	}
 
 	public static int extractNumericValue(String input) {
 		if (input == null) {
 			return 0;
 		}
-		// Remove non-numeric characters using regular expression
 		String numericString = input.replaceAll("[^0-9]", "");
 
-		// Check if the resulting string is not empty
 		if (!numericString.isEmpty()) {
-			// Parse the numeric string to an integer
 			return Integer.parseInt(numericString);
 		} else {
-			// If no numeric characters found, return a default value (you can modify this part)
 			return 0;
 		}
 	}
