@@ -154,7 +154,7 @@
          <td id="max-r" style="color: #3366CC">1715</td>
         </tr>
         <tr style="animation-delay: 300ms">
-         <td id="dsa-curr-r-name" style="color: #3366CC ">
+         <td id="dsa-curr-r-name" style="color: #684273 ">
           <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 511.999 511.999" xml:space="preserve" width="16px" height="16px" fill="#000000">
            <g id="SVGRepo_bgCarrier" stroke-width="0"></g> <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g> <g id="SVGRepo_iconCarrier">
             <rect x="223.319" y="356.221" style="fill:#0f181a;" width="65.362" height="56.647" />
@@ -177,10 +177,10 @@
             </g>
            </g>
           </svg> DSA Rating</td>
-         <td id="dsa-curr-r" style="color: #3366CC ">1747</td>
+         <td id="dsa-curr-r" style="color: #684273 ">1984</td>
         </tr>
         <tr style="animation-delay: 450ms">
-         <td id="dsa-max-r-name" style="color: #3366CC ">
+         <td id="dsa-max-r-name" style="color: #684273 ">
           <svg height="16px" width="16px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="#000000">
            <g id="SVGRepo_bgCarrier" stroke-width="0"></g> <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g> <g id="SVGRepo_iconCarrier">
             <circle style="fill:#000000;" cx="256" cy="256" r="245.551"></circle>
@@ -196,7 +196,7 @@
             </g>
            </g>
           </svg> DSA Max Rating</td>
-         <td id="dsa-max-r" style="color: #3366CC">1747</td>
+         <td id="dsa-max-r" style="color: #684273">1984</td>
         </tr>
         <tr style="animation-delay: 600ms">
          <td style="color:#58a6ff">
@@ -268,7 +268,7 @@
             </g>
            </g>
           </svg> Accepted</td>
-         <td id="accepted" style="color: green">108</td>
+         <td id="accepted" style="color: green">114</td>
         </tr>
        </tbody>
       </table></b>
