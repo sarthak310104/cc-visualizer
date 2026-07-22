@@ -212,12 +212,17 @@ public class CcVisualizerApplication {
 		replaceAttrValue(document, "curr-r-name", "style", "color: " + user.getCurr_col() + " ");
 		replaceAttrValue(document, "max-r-name", "style", "color: " + user.getMx_col() + " ");
 
+		// DSA Rating row
 		replaceInnerText(document, "dsa-curr-r", user.getDsaCurrRating());
 		replaceInnerText(document, "dsa-max-r", user.getDsaMaxRating());
 		replaceAttrValue(document, "dsa-curr-r", "style", "color: " + user.getDsaCurr_col() + " ");
 		replaceAttrValue(document, "dsa-max-r", "style", "color: " + user.getDsaMx_col());
 		replaceAttrValue(document, "dsa-curr-r-name", "style", "color: " + user.getDsaCurr_col() + " ");
 		replaceAttrValue(document, "dsa-max-r-name", "style", "color: " + user.getDsaMx_col() + " ");
+
+		// DSA Global Rank / Country Rank rows
+		replaceInnerText(document, "dsa-g-rank", user.getDsaGlobalRank());
+		replaceInnerText(document, "dsa-c-rank", user.getDsaCountryRank());
 
 		System.out.println(user.toString());
 	}
