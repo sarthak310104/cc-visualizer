@@ -132,7 +132,7 @@
             </g>
            </g>
           </svg> Contest Rating</td>
-         <td id="curr-r" style="color: #3366CC">1715</td>
+         <td id="curr-r" style="color: #3366CC">1721</td>
         </tr>
         <tr style="animation-delay: 150ms">
          <td id="max-r-name" style="color: #3366CC ">
@@ -244,7 +244,7 @@
             </path>
            </g>
           </svg> Country Rank</td>
-         <td id="c-rank" style="color:#58a6ff">6459</td>
+         <td id="c-rank" style="color:#58a6ff">6110</td>
         </tr>
         <tr style="animation-delay: 1050ms">
          <td style="color:#58a6ff">
@@ -260,7 +260,7 @@
             </path>
            </g>
           </svg> Global Rank</td>
-         <td id="g-rank" style="color:#58a6ff">7260</td>
+         <td id="g-rank" style="color:#58a6ff">6886</td>
         </tr>
         <tr style="animation-delay: 1200ms">
          <td style="color:#58a6ff">
@@ -281,7 +281,7 @@
             </path>
            </g>
           </svg> Contests Participated</td>
-         <td id="t-contest" style="color:#58a6ff">2</td>
+         <td id="t-contest" style="color:#58a6ff">3</td>
         </tr>
         <tr style="animation-delay: 1350ms">
          <td style="color: green">
@@ -300,7 +300,7 @@
             </g>
            </g>
           </svg> Accepted</td>
-         <td id="accepted" style="color: green">115</td>
+         <td id="accepted" style="color: green">118</td>
         </tr>
        </tbody>
       </table></b>
